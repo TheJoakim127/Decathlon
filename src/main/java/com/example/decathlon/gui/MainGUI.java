@@ -1,131 +1,227 @@
 package com.example.decathlon.gui;
 
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-
-
-import java.awt.*;
+import java.util.*;
 
 import com.example.decathlon.deca.*;
-
+import com.example.decathlon.heptathlon.*;
+import com.example.decathlon.excel.ExcelPrinter;
 
 public class MainGUI {
 
     private JTextField nameField;
     private JTextField resultField;
     private JComboBox<String> disciplineBox;
-    private JTextArea outputArea;
+
+    private JTable table;
+    private DefaultTableModel model;
+
+    private Map<String, Map<String,Integer>> results = new HashMap<>();
+
+    private String[] disciplines = {
+
+            "Dec 100m (s)",
+            "Dec 400m (s)",
+            "Dec 1500m (min)",
+            "Dec 110m Hurdles (s)",
+            "Dec Long Jump (cm)",
+            "Dec High Jump (cm)",
+            "Dec Pole Vault (cm)",
+            "Dec Discus Throw (m)",
+            "Dec Javelin Throw (m)",
+            "Dec Shot Put (m)",
+
+            "Hep 200m (s)",
+            "Hep 800m (s)",
+            "Hep 100m Hurdles (s)",
+            "Hep High Jump (cm)",
+            "Hep Long Jump (cm)",
+            "Hep Shot Put (m)",
+            "Hep Javelin Throw (m)"
+    };
 
     public static void main(String[] args) {
         new MainGUI().createAndShowGUI();
     }
 
     private void createAndShowGUI() {
+
         JFrame frame = new JFrame("Track and Field Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
+        frame.setSize(900,600);
 
-        JPanel panel = new JPanel(new GridLayout(6, 1));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        // Input for competitor's name
         nameField = new JTextField(20);
         panel.add(new JLabel("Enter Competitor's Name:"));
         panel.add(nameField);
 
-        // Dropdown for selecting discipline
-        String[] disciplines = {
-                "100m", "400m", "1500m", "110m Hurdles",
-                "Long Jump", "High Jump", "Pole Vault",
-                "Discus Throw", "Javelin Throw", "Shot Put"
-        };
         disciplineBox = new JComboBox<>(disciplines);
         panel.add(new JLabel("Select Discipline:"));
         panel.add(disciplineBox);
 
-        // Input for result
         resultField = new JTextField(10);
         panel.add(new JLabel("Enter Result:"));
         panel.add(resultField);
 
-        // Button to calculate and display result
         JButton calculateButton = new JButton("Calculate Score");
         calculateButton.addActionListener(new CalculateButtonListener());
         panel.add(calculateButton);
 
-        // Output area
-        outputArea = new JTextArea(5, 40);
-        outputArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputArea);
-        panel.add(scrollPane);
+        JButton exportButton = new JButton("Export to Excel");
+        exportButton.addActionListener(new ExportButtonListener());
+        panel.add(exportButton);
 
-        frame.add(panel);
+        String[] columns = new String[disciplines.length + 2];
+        columns[0] = "Name";
+
+        for(int i=0;i<disciplines.length;i++){
+            columns[i+1] = disciplines[i];
+        }
+
+        columns[columns.length-1] = "Total";
+
+        model = new DefaultTableModel(columns,0);
+        table = new JTable(model);
+
+        JScrollPane tableScroll = new JScrollPane(table);
+
+        frame.add(panel, BorderLayout.NORTH);
+        frame.add(tableScroll, BorderLayout.CENTER);
+
         frame.setVisible(true);
     }
 
     private class CalculateButtonListener implements ActionListener {
-        @Override
+
         public void actionPerformed(ActionEvent e) {
+
             String name = nameField.getText();
             String discipline = (String) disciplineBox.getSelectedItem();
-            String resultText = resultField.getText();
 
-            try {
-                double result = Double.parseDouble(resultText);
+            try{
+
+                double result = Double.parseDouble(resultField.getText());
 
                 int score = 0;
-                switch (discipline) {
-                    case "100m":
-                        Deca100M deca100M = new Deca100M();
-                        score = deca100M.calculateResult(result);
-                        break;
-                    case "400m":
-                        Deca400M deca400M = new Deca400M();
-                        score = deca400M.calculateResult(result);
-                        break;
-                    case "1500m":
-                        Deca1500M deca1500M = new Deca1500M();
-                        score = deca1500M.calculateResult(result);
-                        break;
-                    case "110m Hurdles":
-                        Deca110MHurdles deca110MHurdles = new Deca110MHurdles();
-                        score = deca110MHurdles.calculateResult(result);
-                        break;
-                    case "Long Jump":
-                        DecaLongJump decaLongJump = new DecaLongJump();
-                        score = decaLongJump.calculateResult(result);
-                        break;
-                    case "High Jump":
-                        DecaHighJump decaHighJump = new DecaHighJump();
-                        score = decaHighJump.calculateResult(result);
-                        break;
-                    case "Pole Vault":
-                        DecaPoleVault decaPoleVault = new DecaPoleVault();
-                        score = decaPoleVault.calculateResult(result);
-                        break;
-                    case "Discus Throw":
-                        DecaDiscusThrow decaDiscusThrow = new DecaDiscusThrow();
-                        score = decaDiscusThrow.calculateResult(result);
-                        break;
-                    case "Javelin Throw":
-                        DecaJavelinThrow decaJavelinThrow = new DecaJavelinThrow();
-                        score = decaJavelinThrow.calculateResult(result);
-                        break;
-                    case "Shot Put":
-                        DecaShotPut decaShotPut = new DecaShotPut();
-                        score = decaShotPut.calculateResult(result);
-                        break;
+
+                switch(discipline){
+
+                    case "Dec 100m (s)" -> score = new Deca100M().calculateResult(result);
+                    case "Dec 400m (s)" -> score = new Deca400M().calculateResult(result);
+                    case "Dec 1500m (min)" -> score = new Deca1500M().calculateResult(result);
+                    case "Dec 110m Hurdles (s)" -> score = new Deca110MHurdles().calculateResult(result);
+                    case "Dec Long Jump (cm)" -> score = new DecaLongJump().calculateResult(result);
+                    case "Dec High Jump (cm)" -> score = new DecaHighJump().calculateResult(result);
+                    case "Dec Pole Vault (cm)" -> score = new DecaPoleVault().calculateResult(result);
+                    case "Dec Discus Throw (m)" -> score = new DecaDiscusThrow().calculateResult(result);
+                    case "Dec Javelin Throw (m)" -> score = new DecaJavelinThrow().calculateResult(result);
+                    case "Dec Shot Put (m)" -> score = new DecaShotPut().calculateResult(result);
+
+                    case "Hep 200m (s)" -> score = new Hep200M().calculateResult(result);
+                    case "Hep 800m (s)" -> score = new Hep800M().calculateResult(result);
+                    case "Hep 100m Hurdles (s)" -> score = new Hep100MHurdles().calculateResult(result);
+                    case "Hep High Jump (cm)" -> score = new HeptHightJump().calculateResult(result);
+                    case "Hep Long Jump (cm)" -> score = new HeptLongJump().calculateResult(result);
+                    case "Hep Shot Put (m)" -> score = new HeptShotPut().calculateResult(result);
+                    case "Hep Javelin Throw (m)" -> score = new HeptJavelinThrow().calculateResult(result);
                 }
 
-                outputArea.append("Competitor: " + name + "\n");
-                outputArea.append("Discipline: " + discipline + "\n");
-                outputArea.append("Result: " + result + "\n");
-                outputArea.append("Score: " + score + "\n\n");
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid number for the result.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                results.putIfAbsent(name,new HashMap<>());
+                results.get(name).put(discipline,score);
+
+                updateTable();
+
+            }catch(NumberFormatException ex){
+
+                JOptionPane.showMessageDialog(null,"Invalid number");
+
             }
+
+        }
+
+    }
+
+    private void updateTable(){
+
+        model.setRowCount(0);
+
+        for(String name : results.keySet()){
+
+            Object[] row = new Object[disciplines.length + 2];
+
+            row[0] = name;
+
+            int total = 0;
+
+            for(int i=0;i<disciplines.length;i++){
+
+                Integer value = results.get(name).get(disciplines[i]);
+
+                if(value != null){
+
+                    row[i+1] = value;
+                    total += value;
+
+                }else{
+
+                    row[i+1] = "";
+
+                }
+
+            }
+
+            row[row.length-1] = total;
+
+            model.addRow(row);
         }
     }
+
+    private class ExportButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e){
+
+            try{
+
+                ExcelPrinter printer = new ExcelPrinter("gui");
+
+                Object[][] data = new Object[model.getRowCount()+1][model.getColumnCount()];
+
+                for(int c=0;c<model.getColumnCount();c++){
+
+                    data[0][c] = model.getColumnName(c);
+
+                }
+
+                for(int r=0;r<model.getRowCount();r++){
+
+                    for(int c=0;c<model.getColumnCount();c++){
+
+                        data[r+1][c] = model.getValueAt(r,c);
+
+                    }
+
+                }
+
+                printer.add(data,"Results");
+
+                printer.write();
+
+                JOptionPane.showMessageDialog(null,"Excel exported");
+
+            }catch(Exception ex){
+
+                JOptionPane.showMessageDialog(null,"Excel export failed");
+
+            }
+
+        }
+
+    }
+
 }
