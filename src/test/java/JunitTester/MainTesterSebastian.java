@@ -1,7 +1,6 @@
 package JunitTester;
 
 
-import com.example.decathlon.common.CalcTrackAndField;
 import com.example.decathlon.deca.Deca100M;
 import com.example.decathlon.deca.Deca400M;
 import com.example.decathlon.deca.DecaHighJump;
@@ -13,64 +12,35 @@ import static org.junit.Assert.assertTrue;
 
 
 public class MainTesterSebastian {
-
+    
     @Test
-    public void testLongJumpNormalValue() {
-        CalcTrackAndField calc = new CalcTrackAndField();
-        int actual = calc.calculateField(
-                0.14354,
-                220,
-                1.4,
-                700
-        );
-        int expected = 814;
+    public void testDecaPoleVaultNormalValue() {
+        DecaPoleVault poleV = new DecaPoleVault();
+
+        int actual = poleV.calculateResult(600);
+        int expected = 1231;
 
         assertEquals(expected, actual);
     }
     @Test
-    public void testNegativeValueDistance() {
-        CalcTrackAndField calc = new CalcTrackAndField();
-        int result = calc.calculateField(
-                0.14354,
-                220,
-                1.4,
-                -700
-        );
-        assertEquals(0, result);
-    }
-    @Test
-    public void testBetterResultHigherPoint() {
-        CalcTrackAndField calc = new CalcTrackAndField();
-        int result1 = calc.calculateField(
-                0.14354,
-                220,
-                1.4,
-                600);
-        int result2 = calc.calculateField(
-                0.14354,
-                220,
-                1.4,
-                700
-        );
-        assertTrue(result2 > result1);
-    }
-    @Test
-    public void testDecaPoleVaultNormalValue() {
+    public void testDecaPoleVaultHighestLimit() {
         DecaPoleVault poleV = new DecaPoleVault();
-        int result = poleV.calculateResult(1);
 
-        assertEquals(1231, result);
+        int actual = poleV.calculateResult(1000);
+        int expected = 2722;
+
+        assertEquals(expected, actual);
     }
     @Test
-    public void testDecaPoleVaultHigherJumpMorePoints() {
+    public void testDecaPoleVaultLowestLimit() {
         DecaPoleVault poleV = new DecaPoleVault();
-        int resultHigh = poleV.calculateResult(700);
 
-        poleV = new DecaPoleVault();
-        int resultLow = poleV.calculateResult(500);
+        int actual = poleV.calculateResult(2);
+        int expected = 0;
 
-        assertTrue(resultHigh > resultLow);
+        assertEquals(expected, actual);
     }
+
     @Test
     public void testDeca400mNormalValue() {
         Deca400M run400m = new Deca400M();
@@ -81,15 +51,22 @@ public class MainTesterSebastian {
         assertEquals(expected, actual);
     }
     @Test
-    public void testDeca400mLessTimeMorePoints() {
+    public void testDeca400mHighestLimit() {
         Deca400M run400m = new Deca400M();
-        int fastTime = run400m.calculateResult(50);
 
-        run400m = new Deca400M();
-        int slowTime = run400m.calculateResult(65);
+        int actual = run400m.calculateResult(100);
+        int expected = 0;
 
-        assertTrue(fastTime > slowTime);
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testDeca400mLowestLimit() {
+        Deca400M run400m = new Deca400M();
 
+        int actual = run400m.calculateResult(20);
+        int expected = 2698;
+
+        assertEquals(expected, actual);
     }
     @Test
     public void testDeca100mNormalValue() {
@@ -101,35 +78,49 @@ public class MainTesterSebastian {
         assertEquals(expected, actual);
     }
     @Test
-    public void testDeca100mLessTimeMorePoints() {
+    public void testDeca100mHighestLimit() {
         Deca100M run100m = new Deca100M();
-        int fastTime = run100m.calculateResult(10);
 
-        run100m = new Deca100M();
-        int slowTime = run100m.calculateResult(12);
-
-        assertTrue(fastTime > slowTime);
-    }
-
-    @Test
-    public void testDecaHighJumpNormalValue() {
-        DecaHighJump HiJump = new DecaHighJump();
-
-        int actual = HiJump.calculateResult(190);
-        int expected = 714;
+        int actual = run100m.calculateResult(17.8);
+        int expected = 1;
 
         assertEquals(expected, actual);
     }
     @Test
-    public void testDecaHighJumpShorterHeightLessPoints() {
-        DecaHighJump hiJump = new DecaHighJump();
-        int higher = hiJump.calculateResult(200);
+    public void testDeca100mLowestLimit() {
+        Deca100M run100m = new Deca100M();
 
-        hiJump = new DecaHighJump();
-        int lower = hiJump.calculateResult(190);
+        int actual = run100m.calculateResult(5);
+        int expected = 2640;
 
-        assertTrue(higher > lower);
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testDecaHighJumpNormalValue() {
+        DecaHighJump HiJump = new DecaHighJump();
 
+        int actual = HiJump.calculateResult(80);
+        int expected = 8;
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testDecaHighJumpHighestLimit() {
+        DecaHighJump HiJump = new DecaHighJump();
+
+        int actual = HiJump.calculateResult(100);
+        int expected = 81;
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testDecaHighJumpLowestLimit() {
+        DecaHighJump HiJump = new DecaHighJump();
+
+        int actual = HiJump.calculateResult(0);
+        int expected = 0;
+
+        assertEquals(expected, actual);
     }
 
 }
