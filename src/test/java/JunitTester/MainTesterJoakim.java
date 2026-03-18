@@ -21,7 +21,7 @@ public class MainTesterJoakim {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
         InputName name = new InputName();
-        String actual = name.addCompetitor("jonas");
+        String actual = name.addCompetitor();
 
         assertEquals("Jonas", actual);
     }
@@ -32,7 +32,7 @@ public class MainTesterJoakim {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
         InputName name = new InputName();
-        String actual = name.addCompetitor("jonas");
+        String actual = name.addCompetitor();
 
         assertEquals("Jonas", actual);
     }
@@ -46,7 +46,7 @@ public class MainTesterJoakim {
         System.setOut(new PrintStream(outContent));
 
         InputName inputName = new InputName();
-        inputName.addCompetitor("jonas");
+        inputName.addCompetitor();
 
         String output = outContent.toString();
 
