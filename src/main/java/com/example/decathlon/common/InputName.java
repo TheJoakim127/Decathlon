@@ -7,7 +7,7 @@ public class InputName {
 
 	
 	//Add competitor
-	public String addCompetitor() {
+	public String addCompetitor(String jonas) {
 
 		boolean active = true;
 		String compName = "";
