@@ -1,6 +1,7 @@
 package JunitTester;
 
 
+import com.example.decathlon.common.CalcTrackAndField;
 import com.example.decathlon.deca.Deca100M;
 import com.example.decathlon.deca.Deca400M;
 import com.example.decathlon.deca.DecaHighJump;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 
 public class MainTesterSebastian {
-    
+
     @Test
     public void testDecaPoleVaultNormalValue() {
         DecaPoleVault poleV = new DecaPoleVault();
