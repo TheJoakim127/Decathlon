@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Decathlon Web MVP</title>
     <style>
-        body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
         .row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; flex-wrap: wrap; }
         .card { border: 1px solid #ddd; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
         table { width: 100%; border-collapse: collapse; }
@@ -28,7 +28,7 @@
     <h2>Add competitor</h2>
     <div class="row">
         <label for="name">Name</label>
-        <input id="name" data-testid="competitorNameInput" placeholder="e.g., Anna" />
+        <input id="name" data-testid="competitorNameInput" placeholder="e.g., Anna Andersson" />
         <button id="add" data-testid="addCompetitorBtn">Add competitor</button>
     </div>
     <div id="error" data-testid="errorBanner" aria-live="polite"></div>
@@ -56,7 +56,11 @@
         </thead>
         <tbody id="standings" data-testid="standingsTable"></tbody>
     </table>
-    <button id="export" data-testid="exportCsvBtn">Export CSV</button>
+    <div class="row">
+        <button id="export" data-testid="exportCsvBtn">Export CSV</button>
+        <input id="importFile" type="file" accept=".csv,text/csv" />
+        <button id="importBtn" type="button">Import CSV</button>
+    </div>
 </div>
 
 <script src="app.js" type="module"></script>

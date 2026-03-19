@@ -8,18 +8,27 @@ function setMsg(text) { msg.textContent = text; err.textContent = ''; }
 const modes = {
   decathlon: {
     events: [
-      { id: '100m', label: '100m' },
-      { id: 'longJump', label: 'Long Jump' },
-      { id: 'shotPut', label: 'Shot Put' },
-      { id: '400m', label: '400m' }
+      { id: '100m', label: '100m (s)' },
+      { id: 'longJump', label: 'Long Jump (cm)' },
+      { id: 'shotPut', label: 'Shot Put (m)' },
+      { id: 'highJump', label: 'High Jump (cm)' },
+      { id: '400m', label: '400m (s)' },
+      { id: '110mHurdles', label: '110m Hurdles (s)' },
+      { id: 'discusThrow', label: 'Discus Throw (m)' },
+      { id: 'poleVault', label: 'Pole Vault (cm)' },
+      { id: 'javelinThrow', label: 'Javelin Throw (m)' },
+      { id: '1500m', label: '1500m (s)' }
     ]
   },
   heptathlon: {
     events: [
-      { id: 'hep100mHurdles', label: '100m Hurdles' },
-      { id: 'hepHighJump', label: 'High Jump' },
-      { id: 'hepShotPut', label: 'Shot Put' },
-      { id: 'hep200m', label: '200m' }
+      { id: 'hep100mHurdles', label: '100m Hurdles (s)' },
+      { id: 'hepHighJump', label: 'High Jump (cm)' },
+      { id: 'hepShotPut', label: 'Shot Put (m)' },
+      { id: 'hep200m', label: '200m (s)' },
+      { id: 'hepLongJump', label: 'Long Jump (cm)' },
+      { id: 'hepJavelinThrow', label: 'Javelin Throw (m)' },
+      { id: 'hep800m', label: '800m (s)' }
     ]
   }
 };
@@ -42,7 +51,7 @@ function setEventOptions() {
 function setStandingsHeader() {
   const mode = currentMode();
   const head = el('standingsHead');
-  const cols = ['Name', ...modes[mode].events.map(e => e.label), 'Total'];
+  const cols = ['Place', 'Name', ...modes[mode].events.map(e => e.label), 'Total'];
   head.innerHTML = cols.map(c => `<th>${escapeHtml(c)}</th>`).join('');
 }
 
@@ -65,15 +74,18 @@ el('add').addEventListener('click', async () => {
   }
   try {
     const res = await fetch('/api/competitors', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name })
     });
     if (!res.ok) {
       const t = await res.text();
       setError(t || 'Failed to add competitor');
     } else {
-      setMsg('Added');
-      if (!el('name2').value) el('name2').value = name;
+      const json = await res.json();
+      setMsg(`Added: ${json.name}`);
+      el('name').value = json.name;
+      if (!el('name2').value) el('name2').value = json.name;
     }
     await renderStandings();
   } catch (e) {
@@ -100,7 +112,8 @@ el('save').addEventListener('click', async () => {
   const body = { name, event, raw };
   try {
     const res = await fetch('/api/score', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
     if (!res.ok) {
@@ -110,13 +123,12 @@ el('save').addEventListener('click', async () => {
     }
     const json = await res.json();
     setMsg(`Saved: ${json.points} pts`);
+    el('name2').value = json.name;
     await renderStandings();
   } catch (e) {
     setError('Score failed');
   }
 });
-
-let sortBroken = false;
 
 el('export').addEventListener('click', async () => {
   try {
@@ -132,22 +144,50 @@ el('export').addEventListener('click', async () => {
     a.href = URL.createObjectURL(blob);
     a.download = 'results.csv';
     a.click();
-    sortBroken = true;
   } catch (e) {
     setError('Export failed');
+  }
+});
+
+el('importBtn').addEventListener('click', async () => {
+  const file = el('importFile').files?.[0];
+  if (!file) {
+    setError('Choose a CSV file');
+    return;
+  }
+  try {
+    const text = await file.text();
+    const res = await fetch('/api/import.csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: text
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      setError(t || 'Import failed');
+      return;
+    }
+    setMsg('Import completed');
+    await renderStandings();
+  } catch (e) {
+    setError('Import failed');
   }
 });
 
 async function renderStandings() {
   try {
     const res = await fetch('/api/standings');
+    if (!res.ok) {
+      setError('Could not load standings');
+      return;
+    }
     const data = await res.json();
     const mode = currentMode();
     const eventIds = modes[mode].events.map(e => e.id);
 
-    const sorted = sortBroken ? data : data.sort((a, b) => (b.total || 0) - (a.total || 0));
-    const rows = sorted.map(r => {
+    const rows = data.map(r => {
       const tds = [
+        `<td>${r.rank ?? ''}</td>`,
         `<td>${escapeHtml(r.name)}</td>`,
         ...eventIds.map(id => `<td>${r.scores?.[id] ?? ''}</td>`),
         `<td>${r.total ?? 0}</td>`
