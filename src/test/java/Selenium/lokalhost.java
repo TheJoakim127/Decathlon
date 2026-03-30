@@ -11,6 +11,6 @@ public class lokalhost {
         WebDriver driver = new ChromeDriver();
         driver.get("http://localhost:8080/");
 
-        //driver.findElement(By.id("modeDeca")).click();
+        driver.findElement(By.id("modeHep")).click();
     }
 }
