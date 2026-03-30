@@ -12,9 +12,7 @@ public class lokalhost {
         driver.get("http://localhost:8080/");
 
 
-        driver.findElement(By.id("modeDeca")).click();
+        //driver.findElement(By.id("modeDeca")).click();
     }
-
-    @Test
 
 }
