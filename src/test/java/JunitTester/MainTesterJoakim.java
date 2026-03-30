@@ -52,10 +52,22 @@ public class MainTesterJoakim {
 
         assertTrue(output.contains("Only use letters when putting in competitors name."));
     }
+
+
+
+@Test
+public void testAddCompetitor_validInput() {
+    String input = "JoNaS\n";
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    InputName Name = new InputName();
+    String result = Name.addCompetitor();
+
+    assertEquals("Jonas", result);
 }
 
 
-
+}
 
 
 
