@@ -21,5 +21,6 @@ public class JoakimSeleniumTest {
     public void tricentisOpenTest() {
         WebDriver driver = new ChromeDriver();
         driver.get("http://localhost:8080/");
+        driver.findElement(By.id("modeHep")).click();
     }
 }
