@@ -13,5 +13,4 @@ public class lokalhost {
 
         //driver.findElement(By.id("modeDeca")).click();
     }
-
 }
