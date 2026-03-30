@@ -8,7 +8,7 @@ public class lokalhost {
     @Test
     public void testoppenlokalhost(){
         WebDriver driver= new ChromeDriver();
-        driver.get();
+        driver.get("http://localhost:8080/");
     }
 
 }
