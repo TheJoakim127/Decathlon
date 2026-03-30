@@ -6,10 +6,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public class lokalhost {
@@ -38,16 +41,16 @@ public class lokalhost {
         try {
             driver.get("http://localhost:8080/");
 
-            // 選 Heptathlon
+            // Väljer Heptathlon
             driver.findElement(By.id("modeHep")).click();
 
-            // 輸入名字
+            // Skriver in namn
             driver.findElement(By.id("name")).sendKeys("Cici");
 
-            // 新增選手
+            // Lägger till en deltagare
             driver.findElement(By.id("add")).click();
 
-            // 測試資料
+            // Testdata för olika grenar
             Map<String, String> testData = new HashMap<>();
             testData.put("100m Hurdles (s)", "9");
             testData.put("High Jump (cm)", "150");
@@ -57,7 +60,7 @@ public class lokalhost {
             testData.put("Javelin Throw (m)", "30");
             testData.put("800m (s)", "70");
 
-            // 一個一個測 event
+            // Testar varje gren med ett värde
             for (String event : testData.keySet()) {
                 Select eventSelect = new Select(driver.findElement(By.id("event")));
                 eventSelect.selectByVisibleText(event);
@@ -68,10 +71,11 @@ public class lokalhost {
 
                 driver.findElement(By.id("save")).click();
 
-                System.out.println("Tested: " + event + " -> " + testData.get(event));
+                System.out.println("Testade: " + event + " -> " + testData.get(event));
             }
 
         } finally {
+            // Stänger webbläsaren
             // driver.quit();
         }
     }
