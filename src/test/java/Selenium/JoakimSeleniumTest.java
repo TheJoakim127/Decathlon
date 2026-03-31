@@ -33,7 +33,9 @@ public class JoakimSeleniumTest {
         driver.findElement(By.id("raw")).sendKeys("250");
         driver.findElement(By.id("save")).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        String total = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='standingsTable'] tr td:last-child"))).getText();
+        By totalLocator = By.cssSelector("[data-testid='standingsTable'] tr td:last-child");
+        wait.until(ExpectedConditions.textToBe(totalLocator, "1948"));
+        String total = driver.findElement(totalLocator).getText();
         String name = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='standingsTable'] tr td:nth-child(2)"))).getText();
         assertEquals("1948", total);
         assertEquals("Anna", name);
