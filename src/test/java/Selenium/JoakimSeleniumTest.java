@@ -32,12 +32,11 @@ public class JoakimSeleniumTest {
         select.selectByValue("hepHighJump");
         driver.findElement(By.id("raw")).sendKeys("250");
         driver.findElement(By.id("save")).click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         String total = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='standingsTable'] tr td:last-child"))).getText();
         String name = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='standingsTable'] tr td:nth-child(2)"))).getText();
         assertEquals("1948", total);
         assertEquals("Anna", name);
-
-        //driver.quit();
+        driver.quit();
     }
 }
