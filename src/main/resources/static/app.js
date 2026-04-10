@@ -72,12 +72,14 @@ el('add').addEventListener('click', async () => {
     setError('Empty name');
     return;
   }
+
   try {
     const res = await fetch('/api/competitors', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name })
     });
+
     if (!res.ok) {
       const t = await res.text();
       setError(t || 'Failed to add competitor');
@@ -87,6 +89,7 @@ el('add').addEventListener('click', async () => {
       el('name').value = json.name;
       if (!el('name2').value) el('name2').value = json.name;
     }
+
     await renderStandings();
   } catch (e) {
     setError('Network error');
@@ -96,31 +99,38 @@ el('add').addEventListener('click', async () => {
 el('save').addEventListener('click', async () => {
   const name = (el('name2').value || '').trim();
   const event = el('event').value;
-  const raw = parseFloat(el('raw').value);
+  const result = parseFloat(el('raw').value);
+
   if (!name) {
     setError('Empty name');
     return;
   }
+
   if (!event) {
     setError('Empty event');
     return;
   }
-  if (Number.isNaN(raw)) {
+
+  if (Number.isNaN(result)) {
     setError('Invalid result');
     return;
   }
-  const body = { name, event, raw };
+
+  const body = { name, event, result };
+
   try {
     const res = await fetch('/api/score', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
+
     if (!res.ok) {
       const t = await res.text();
       setError(t || 'Score failed');
       return;
     }
+
     const json = await res.json();
     setMsg(`Saved: ${json.points} pts`);
     el('name2').value = json.name;
@@ -138,6 +148,7 @@ el('export').addEventListener('click', async () => {
       setError(t || 'Export failed');
       return;
     }
+
     const text = await res.text();
     const blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
@@ -155,6 +166,7 @@ el('importBtn').addEventListener('click', async () => {
     setError('Choose a CSV file');
     return;
   }
+
   try {
     const text = await file.text();
     const res = await fetch('/api/import.csv', {
@@ -162,11 +174,13 @@ el('importBtn').addEventListener('click', async () => {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: text
     });
+
     if (!res.ok) {
       const t = await res.text();
       setError(t || 'Import failed');
       return;
     }
+
     setMsg('Import completed');
     await renderStandings();
   } catch (e) {
@@ -181,6 +195,7 @@ async function renderStandings() {
       setError('Could not load standings');
       return;
     }
+
     const data = await res.json();
     const mode = currentMode();
     const eventIds = modes[mode].events.map(e => e.id);

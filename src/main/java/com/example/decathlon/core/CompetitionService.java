@@ -54,6 +54,7 @@ public class CompetitionService {
         String lower = trimmed.toLowerCase(Locale.ROOT);
         StringBuilder sb = new StringBuilder(lower.length());
         boolean upperNext = true;
+
         for (int i = 0; i < lower.length(); i++) {
             char ch = lower.charAt(i);
             if (upperNext && Character.isLetter(ch)) {
@@ -64,27 +65,33 @@ public class CompetitionService {
                 upperNext = ch == ' ' || ch == '-' || ch == '\'';
             }
         }
+
         return sb.toString();
     }
 
     public synchronized String addCompetitor(String name) {
         String normalized = normalizeName(name);
+
         if (normalized.isEmpty()) {
             throw new IllegalArgumentException("Empty name");
         }
+
         if (competitors.containsKey(normalized)) {
             return normalized;
         }
+
         if (competitors.size() >= 40) {
             throw new IllegalStateException("Too many competitors");
         }
+
         competitors.put(normalized, new Competitor(normalized));
         return normalized;
     }
 
-    public synchronized int score(String name, String eventId, double raw) {
+    public synchronized int score(String name, String eventId, double result) {
         String normalized = normalizeName(name);
         Competitor c = competitors.get(normalized);
+
         if (c == null) {
             if (competitors.size() >= 40) {
                 throw new IllegalStateException("Too many competitors");
@@ -92,7 +99,8 @@ public class CompetitionService {
             c = new Competitor(normalized);
             competitors.put(normalized, c);
         }
-        int pts = scoring.score(eventId, raw);
+
+        int pts = scoring.score(eventId, result);
         c.points.put(eventId, pts);
         return pts;
     }
@@ -108,10 +116,12 @@ public class CompetitionService {
 
         for (int i = 0; i < sorted.size(); i++) {
             Competitor c = sorted.get(i);
+
             if (c.total() != prevTotal) {
                 rank = i + 1;
                 prevTotal = c.total();
             }
+
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("rank", rank);
             m.put("name", c.name);
@@ -144,6 +154,7 @@ public class CompetitionService {
             row.add(String.valueOf(c.total()));
             sb.append(String.join(",", row)).append("\n");
         }
+
         return sb.toString();
     }
 
@@ -159,6 +170,7 @@ public class CompetitionService {
 
         List<String> header = parseCsvLine(lines[0]);
         int nameIndex = header.indexOf("Name");
+
         if (nameIndex < 0) {
             throw new IllegalArgumentException("Missing Name column");
         }
@@ -166,19 +178,31 @@ public class CompetitionService {
         Map<String, Competitor> imported = new LinkedHashMap<>();
 
         for (int i = 1; i < lines.length; i++) {
-            if (lines[i].isBlank()) continue;
+            if (lines[i].isBlank()) {
+                continue;
+            }
+
             List<String> cells = parseCsvLine(lines[i]);
             String rawName = getCell(cells, nameIndex);
             String normalizedName = normalizeName(rawName);
-            if (normalizedName.isEmpty()) continue;
+
+            if (normalizedName.isEmpty()) {
+                continue;
+            }
 
             Competitor competitor = imported.computeIfAbsent(normalizedName, Competitor::new);
 
             for (String eventId : ALL_EVENT_IDS) {
                 int idx = header.indexOf(eventId);
-                if (idx < 0) continue;
+                if (idx < 0) {
+                    continue;
+                }
+
                 String value = getCell(cells, idx).trim();
-                if (value.isEmpty()) continue;
+                if (value.isEmpty()) {
+                    continue;
+                }
+
                 competitor.points.put(eventId, Integer.parseInt(value));
             }
         }
