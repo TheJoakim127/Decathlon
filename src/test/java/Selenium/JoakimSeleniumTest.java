@@ -10,12 +10,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-
-public class lokalhost {
+public class JoakimSeleniumTest {
     @Test
     public void testoppenlokalhost() {
         WebDriver driver = new ChromeDriver();
