@@ -21,10 +21,14 @@ public class ApiController {
     @PostMapping("/competitors")
     public ResponseEntity<?> add(@RequestBody Map<String, String> body) {
         String name = Optional.ofNullable(body.get("name")).orElse("").trim();
-        if (name.isEmpty()) return ResponseEntity.badRequest().body("Empty name");
+        if (name.isEmpty()) {
+            return ResponseEntity.badRequest().body("Empty name");
+        }
         try {
             String savedName = comp.addCompetitor(name);
             return ResponseEntity.status(201).body(Map.of("name", savedName));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IllegalStateException e) {
             return ResponseEntity.status(429).body(e.getMessage());
         }
@@ -32,17 +36,32 @@ public class ApiController {
 
     @PostMapping("/score")
     public ResponseEntity<?> score(@RequestBody ScoreReq r) {
-        if (r == null) return ResponseEntity.badRequest().body("Invalid body");
+        if (r == null) {
+            return ResponseEntity.badRequest().body("Invalid body");
+        }
+
         String name = Optional.ofNullable(r.name()).orElse("").trim();
         String event = Optional.ofNullable(r.event()).orElse("").trim();
-        double raw = r.raw();
-        if (name.isEmpty()) return ResponseEntity.badRequest().body("Empty name");
-        if (event.isEmpty()) return ResponseEntity.badRequest().body("Empty event");
-        if (Double.isNaN(raw) || Double.isInfinite(raw)) return ResponseEntity.badRequest().body("Invalid result");
+        double result = r.result();
+
+        if (name.isEmpty()) {
+            return ResponseEntity.badRequest().body("Empty name");
+        }
+
+        if (event.isEmpty()) {
+            return ResponseEntity.badRequest().body("Empty event");
+        }
+
+        if (Double.isNaN(result) || Double.isInfinite(result)) {
+            return ResponseEntity.badRequest().body("Invalid result");
+        }
+
         try {
             String normalizedName = comp.normalizeName(name);
-            int pts = comp.score(normalizedName, event, raw);
+            int pts = comp.score(normalizedName, event, result);
             return ResponseEntity.ok(Map.of("name", normalizedName, "points", pts));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IllegalStateException e) {
             return ResponseEntity.status(429).body(e.getMessage());
         }

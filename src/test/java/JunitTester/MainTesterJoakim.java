@@ -2,6 +2,8 @@ package JunitTester;
 
 
 import com.example.decathlon.common.InputName;
+import com.example.decathlon.deca.DecaPoleVault;
+import com.example.decathlon.gui.MainGUI;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -42,9 +44,6 @@ public class MainTesterJoakim {
 
         assertTrue(output.contains("Only use letters when putting in competitors name."));
     }
-
-
-
 
 }
 
