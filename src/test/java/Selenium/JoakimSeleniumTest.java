@@ -8,13 +8,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Instant;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class TamaraSeleniumTest {
+public class JoakimSeleniumTest {
     private WebDriverWait wait;
     public WebElement waitForVisible(By locator) {
 
