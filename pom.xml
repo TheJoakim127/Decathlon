@@ -1,15 +1,20 @@
-This XML file does not appear to have any style information associated with it. The document tree is shown below.
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.example</groupId>
     <artifactId>Decathlon</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.3.1</spring.boot.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -21,6 +26,7 @@ This XML file does not appear to have any style information associated with it. 
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,14 +52,25 @@ This XML file does not appear to have any style information associated with it. 
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--  Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java  -->
+
+        <!-- Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.41.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.34.3</version>
+            <scope>compile</scope>
+        </dependency>
+
+
     </dependencies>
+
+
     <build>
         <plugins>
             <plugin>
@@ -62,4 +79,5 @@ This XML file does not appear to have any style information associated with it. 
             </plugin>
         </plugins>
     </build>
+
 </project>
