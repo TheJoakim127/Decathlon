@@ -25,7 +25,7 @@ public class JoakimSeleniumTest {
         WebDriver driver = new ChromeDriver();
         driver.get("http://localhost:8080/");
         driver.findElement(By.id("modeHep")).click();
-        driver.findElement(By.id("name")).sendKeys("Anna");
+        driver.findElement(By.id("name")).sendKeys("Steve");
         driver.findElement(By.id("add")).click();
         WebElement dropdown = driver.findElement(By.id("event"));
         Select select = new Select(dropdown);
@@ -38,12 +38,12 @@ public class JoakimSeleniumTest {
         String total = driver.findElement(totalLocator).getText();
         String name = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='standingsTable'] tr td:nth-child(2)"))).getText();
         assertEquals("1948", total);
-        assertEquals("Anna", name);
+        assertEquals("Steve", name);
         //driver.quit();
     }
 
     @Test
-    public void AddCompetitor() {
+    public void AddCompetitor2() {
         WebDriver driver = new ChromeDriver();
         driver.get("http://localhost:8080/");
         driver.findElement(By.id("modeHep")).click();
@@ -52,28 +52,15 @@ public class JoakimSeleniumTest {
 
     }
 
+
+
     @Test
-    public void EnterResultHighJump() {
+    public void EnterResultShotPut4() {
         WebDriver driver = new ChromeDriver();
         driver.get("http://localhost:8080/");
         driver.findElement(By.id("modeHep")).click();
         WebElement Add = driver.findElement(By.id("name"));
-        Add.sendKeys("Anna");
-        driver.findElement(By.id("add")).click();
-        driver.findElement(new By.ByXPath("/html/body/div[3]/div[1]/select/option[2]")).click();
-        driver.findElement(By.id("raw")).sendKeys("100");
-        driver.findElement(By.id("save")).click();
-
-
-    }
-
-    @Test
-    public void EnterResultShotPut() {
-        WebDriver driver = new ChromeDriver();
-        driver.get("http://localhost:8080/");
-        driver.findElement(By.id("modeHep")).click();
-        WebElement Add = driver.findElement(By.id("name"));
-        Add.sendKeys("Josef");
+        Add.sendKeys("David");
         driver.findElement(By.id("add")).click();
         driver.findElement(new By.ByCssSelector("#event > option:nth-child(3)")).click();
         driver.findElement(By.id("raw")).sendKeys("100");
